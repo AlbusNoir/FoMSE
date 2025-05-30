@@ -4,19 +4,32 @@ from PyQt6 import uic
 import sys
 import os
 import shutil
+from pathlib import Path
 
+# Fomse - Fields of Mistria Save Editor
+# A simple save editor for the game Fields of Mistria, allowing users to unpack and pack save files using the VaultC executable.
+# If needed: https://www.reddit.com/r/learnpython/comments/lkb8r3/pyqt5_and_pyinstaller_fail_to_build_exe/
 
 class InfoWindow(QMainWindow):
     def __init__(self):
         super(InfoWindow, self).__init__()
-        uic.loadUi('info.ui', self)  # Load the UI file for the info window
+        # Check for sys._MEIPASS
+        bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+        uic.loadUi(bundle_dir / 'info.ui', self)  # Load the UI file from the bundle directory
+
+        #uic.loadUi('info.ui', self)  # Load the UI file for the info window
         self.setWindowTitle("Info")  # Set the window title
         self.show()  # Show the info window
 
 class AboutWindow(QMainWindow):
     def __init__(self):
         super(AboutWindow, self).__init__()
-        uic.loadUi('about.ui', self)  # Load the UI file for the about window
+
+        # Check for sys._MEIPASS
+        bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+        uic.loadUi(bundle_dir / 'about.ui', self)  # Load the UI file from the bundle directory
+
+        #uic.loadUi('about.ui', self)  # Load the UI file for the about window
         self.setWindowTitle("About")  # Set the window title
         self.show()  # Show the about window
 
@@ -25,7 +38,12 @@ class AboutWindow(QMainWindow):
 class Fomse(QMainWindow):
     def __init__(self):
         super(Fomse, self).__init__()
-        uic.loadUi('fomse.ui', self)  # Load the UI file
+
+        # Check for sys._MEIPASS
+        bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+        uic.loadUi(bundle_dir / 'fomse.ui', self)  # Load the UI file from the bundle directory
+
+        #uic.loadUi('fomse.ui', self)  # Load the UI file
         self.setWindowTitle("Fields of Mistria Save Editor")  # Set the window title
 
         # Menu
