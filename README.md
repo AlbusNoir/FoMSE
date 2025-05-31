@@ -4,11 +4,18 @@ FoMSE is essentially just a wrapper that follows the steps outlined [here](https
 
 ## Installation
 
-Because of the reliance on vaultc, you will need to go to the [releases](https://github.com/NPC-Studio/vaultc/releases) page and grab the latest release. Otherwise, I've wrapped the Python files into an exe for ease of use.
+Because of the reliance on vaultc, you will need to go to the [vaultc releases](https://github.com/NPC-Studio/vaultc/releases) page and grab the latest release. Otherwise, I've wrapped the Python files into an exe for ease of use.  
+
+You can get the latest release from [releases](https://github.com/AlbusNoir/FoMSE/releases).
 
 ## Usage
 
-FoMSE features a UI that is largely self explanatory, but it also has a help button if needed.
+FoMSE features a UI that is largely self explanatory, but it also has a help button if needed.  
+
+## Planned Additions
+- [ ] Add section (possible new ui) for common edits (e.g. gold, health, stamina, etc)
+- [ ] Add icon
+- [ ] More?
 
 ## License
 
