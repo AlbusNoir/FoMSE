@@ -22,7 +22,6 @@ class InfoWindow(QMainWindow):
         bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
         uic.loadUi(bundle_dir / 'info.ui', self)  # Load the UI file from the bundle directory
 
-        #uic.loadUi('info.ui', self)  # This is commented out because we are using the bundled UI file
         self.setWindowTitle("Info")  # Set the window title
         self.show()  # Show the info window
 
@@ -34,7 +33,6 @@ class AboutWindow(QMainWindow):
         bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
         uic.loadUi(bundle_dir / 'about.ui', self)  # Load the UI file from the bundle directory
 
-        #uic.loadUi('about.ui', self)  # # This is commented out because we are using the bundled UI file
         self.setWindowTitle("About")  # Set the window title
         self.show()  # Show the about window
 
@@ -48,7 +46,6 @@ class Fomse(QMainWindow):
         bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
         uic.loadUi(bundle_dir / 'fomse.ui', self)  # Load the UI file from the bundle directory
 
-        #uic.loadUi('fomse.ui', self)  # This is commented out because we are using the bundled UI file
         self.setWindowTitle("Fields of Mistria Save Editor")  # Set the window title
 
         # Menu
