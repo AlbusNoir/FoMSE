@@ -184,7 +184,7 @@ class Fomse(QMainWindow):
             else:
                 src_file = file
                 dest_file = os.path.join(backup_dir, os.path.basename(src_file))
-                # if it exists, check if the file already exists in the backup directory
+                # check if the file already exists in the backup directory
                 if os.path.exists(os.path.join(backup_dir, os.path.basename(file))):
                     # if it exists, ask the user if they want to overwrite it
                     msgBox = QMessageBox()
