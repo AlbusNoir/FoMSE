@@ -204,7 +204,14 @@
     <addaction name="actionInfo"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuQuickEdits">
+    <property name="title">
+     <string>Quick Edits</string>
+    </property>
+    <addaction name="actionQuickEdits"/>
+   </widget>
    <addaction name="menuHelp"/>
+   <addaction name="menuQuickEdits"/>
   </widget>
   <action name="actionUsage">
    <property name="text">
@@ -219,6 +226,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionQuickEdits">
+   <property name="text">
+    <string>Make Quick Edits</string>
    </property>
   </action>
  </widget>

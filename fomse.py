@@ -4,6 +4,7 @@ import sys
 import os
 import shutil
 from pathlib import Path
+import json
 
 # Fomse - Fields of Mistria Save Editor
 # A simple save editor for the game Fields of Mistria, allowing users to unpack and pack save files using the VaultC executable.
@@ -36,6 +37,111 @@ class AboutWindow(QMainWindow):
         self.setWindowTitle("About")  # Set the window title
         self.show()  # Show the about window
 
+class QuickEditsWindow(QMainWindow):
+    def __init__(self):
+        super(QuickEditsWindow, self).__init__()
+
+        # Check for sys._MEIPASS
+        bundle_dir = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+        uic.loadUi(bundle_dir / 'quickedits.ui', self)  # Load the UI file from the bundle directory
+
+        self.setWindowTitle("Quick Edits")  # Set the window title
+
+        self.healthLbl = self.findChild(QLabel, 'healthLbl')
+        self.healthEdit = self.findChild(QLineEdit, 'healthEdit')
+        self.manaLbl = self.findChild(QLabel, 'manaLbl')
+        self.manaEdit = self.findChild(QLineEdit, 'manaEdit')
+        self.stamLbl = self.findChild(QLabel, 'stamLbl')
+        self.stamEdit = self.findChild(QLineEdit, 'stamEdit')
+        self.essLbl = self.findChild(QLabel, 'essLbl')
+        self.essEdit = self.findChild(QLineEdit, 'essEdit')
+        self.freebathLbl = self.findChild(QLabel, 'freebathLbl')
+        self.freebathEdit = self.findChild(QLineEdit, 'freebathEdit')
+        self.goldLbl = self.findChild(QLabel, 'goldLbl')
+        self.goldEdit = self.findChild(QLineEdit, 'goldEdit')
+        self.loadCurBtn = self.findChild(QPushButton, 'loadCurBtn')
+        self.saveBtn = self.findChild(QPushButton, 'saveBtn')
+        self.playerJsonLbl = self.findChild(QLabel, 'playerJsonLbl')
+        self.playerJsonEdit = self.findChild(QLineEdit, 'playerJsonEdit')
+
+        self.loadCurBtn.clicked.connect(self.load_current_stats)  # Connect the load current stats button to the function
+        self.saveBtn.clicked.connect(self.save_quickedits)  # Connect the save button to the save function
+
+        self.show()  # Show the quick edits window
+
+    def load_current_stats(self):
+        # Function to get current stats from a save file
+        dir_name = QFileDialog.getExistingDirectory(self, "Select the Unpacked Directory", FOM_DIR, QFileDialog.Option.ShowDirsOnly)
+        file_name = dir_name + "\\Player.json"
+        if file_name:
+            try:
+                with open(file_name, 'r') as f:
+                    data = json.load(f)
+                    health = data['stats']['base_health']
+                    mana = data['stats']['mana_max']
+                    stamina = data['stats']['base_stamina']
+                    essence = data['stats']['essence']
+                    free_baths = data['stats']['free_baths']
+                    gold = data['stats']['gold']
+
+                    self.healthEdit.setText(str(health))
+                    self.manaEdit.setText(str(mana))
+                    self.stamEdit.setText(str(stamina))
+                    self.essEdit.setText(str(essence))
+                    self.freebathEdit.setText(str(free_baths))
+                    self.goldEdit.setText(str(gold))
+
+                    self.playerJsonEdit.setText(f"{os.path.basename(file_name)}")
+                    self.playerJsonEdit.setToolTip(f"Full path: {file_name}")
+
+            except Exception as e:
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Error Loading Stats")
+                msgBox.setText(f"An error occurred while loading stats: {e}.\nPlease ensure you have unpacked a save and that Player.json exists.")
+                msgBox.exec()
+                return
+
+
+    def save_quickedits(self):
+        # Function to save the quick edits to the Player.json file
+        file_name_dirty = self.playerJsonEdit.toolTip()
+        file_name = file_name_dirty.replace("Full path: ", "")
+        if file_name:
+            try:
+                with open(file_name, 'r') as f:
+                    data = json.load(f)
+
+                    # Update stats with values from the line edits
+                    data['stats']['base_health'] = float(self.healthEdit.text())
+                    data['stats']['mana_max'] = float(self.manaEdit.text())
+                    data['stats']['base_stamina'] = float(self.stamEdit.text())
+                    data['stats']['essence'] = float(self.essEdit.text())
+                    data['stats']['free_baths'] = float(self.freebathEdit.text())
+                    data['stats']['gold'] = float(self.goldEdit.text())
+                    # update the current values to match the new max values for health, mana, and stamina
+                    data['stats']['health_current'] = float(self.healthEdit.text())
+                    data['stats']['mana_current'] = float(self.manaEdit.text())
+                    data['stats']['stamina_current'] = float(self.stamEdit.text())
+
+            except Exception as e:
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Error Saving Stats")
+                msgBox.setText(f"An error occurred while saving stats: {e}.\nPlease ensure you have unpacked a save and that Player.json exists.")
+                msgBox.exec()
+                return
+                
+            else:
+                # Write the updated data back to the file
+                with open(file_name, 'w') as f:
+                    json.dump(data, f, indent=4)
+
+                # Show a message box indicating success
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Save Successful")
+                msgBox.setText("The quick edits have been saved successfully.\nYou may close this window and proceed to pack the save file.")
+                msgBox.exec()
+        
+
 
 
 class Fomse(QMainWindow):
@@ -51,6 +157,7 @@ class Fomse(QMainWindow):
         # Menu
         self.actionInfo.triggered.connect(self.open_info_window)  # Connect the Info action to the info window
         self.actionAbout.triggered.connect(self.open_about_window)  # Connect the About action to the about window
+        self.actionQuickEdits.triggered.connect(self.open_quickedits_window)  # Connect the Quick Edits action to the quick edits window
         
 
         # Widgets
@@ -167,6 +274,11 @@ class Fomse(QMainWindow):
         self.about_window = AboutWindow()
         self.about_window.show()
 
+    def open_quickedits_window(self):
+        # Create and show the quick edits window
+        self.quickedits_window = QuickEditsWindow()
+        self.quickedits_window.show()
+
     def unpack_files(self): 
         if self.requirements_check():
         # if all checks pass, proceed with unpacking
@@ -235,7 +347,21 @@ class Fomse(QMainWindow):
             exec_file_dirty = self.curExec.toolTip()  # Get the executable file from the tooltip of the line edit
             exec_file_clean = exec_file_dirty.replace("Full path: ", "")
 
-            os.system(f'{exec_file_clean} pack \"{unpack_dir_clean}\" \"{file}\"') # Run the pack command
+            try:
+                os.system(f'{exec_file_clean} pack \"{unpack_dir_clean}\" \"{file}\"') # Run the pack command
+
+            except Exception as e:
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Error Packing Save")
+                msgBox.setText(f"An error occurred while packing the save file: {e}.\nPlease ensure all fields are correct and try again.")
+                msgBox.exec()
+                return
+            
+            else:
+                msgBox = QMessageBox()
+                msgBox.setWindowTitle("Pack Successful")
+                msgBox.setText(f"The save file has been packed successfully to:\n{file}\nYou may now launch the game and load your save.")
+                msgBox.exec()
 
         # Run cleanup
         self.clean_up()
@@ -254,6 +380,7 @@ class Fomse(QMainWindow):
         unpack_dir_clean = unpack_dir_dirty.replace("Full path: ", "")
 
         os.system(f'del /q \"{unpack_dir_clean}\\*\"')  # Delete all files in the unpacked directory
+        os.system(f'rmdir /s /q \"{unpack_dir_clean}\"')  # Remove the unpacked directory
 
 
 

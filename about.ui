@@ -49,16 +49,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>300</width>
-     <height>33</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections/>
